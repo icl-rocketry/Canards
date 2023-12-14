@@ -17,7 +17,7 @@ trange = np.linspace(0,time,round(time/dt)) #generate time array
 omega = [initialRollRate] #initialise roll rate
 Minit = 0.1 #initialise value of initial moment
 
-while abs(omega[-1])>1: #loop to find intial required moment
+while abs(omega[-1])>0.2: #loop to find intial required moment
     k = Minit/(vy0**2) #M=k*v^2
     M = []
     omega = [initialRollRate] #reset roll rate
@@ -30,7 +30,7 @@ while abs(omega[-1])>1: #loop to find intial required moment
         beta.append(np.arctan(omegai*0.13/vy[i]))
 
     
-    Minit = Minit + float(0.1)
+    Minit = Minit + float(0.01)
 
 print("Initial value of torque =",Minit)
 
@@ -41,10 +41,14 @@ print("Initial value of torque =",Minit)
 
 MDDeff = 0.7 #mach drag divergence of aerofoil
 MDD = 0.78 #Max mach number of flight
-Cr = 0.13 #root chord
 a0 = 6.226315 #airfoil lift curve slope
+
+#initial values to iterate
+Cr = 0.13 #root chord
 AR = 1.42 #assume aspect ratio
 dxEst = 0.148 #guess for value of moment arm - to be iterated
+
+#calculate planform
 phi25 = np.arccos((MDDeff/MDD)**(1)) #calculate quarter chord sweep angle
 print("Quarter chord sweep angle",np.degrees(phi25))
 a3d = (a0*np.cos(phi25))/(np.sqrt(1+((a0*np.cos(phi25))/(np.pi*AR))**2)+((a0*np.cos(phi25))/(np.pi*AR))) #calculate lift curve slope of 3d wing
@@ -73,7 +77,7 @@ print("Y aerodynamic centre =",yac)
 dx = 0.107 + yac #find moment arm
 print("Moment arm =",dx)
 
-#Test if goood - not good so ignore this for now
+#Test if goood
 M = []
 omegaReal = [initialRollRate]
 
